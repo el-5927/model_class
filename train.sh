@@ -1,0 +1,1 @@
+nohup python3 -u train.py >./logs/train.log 2>&1 &
