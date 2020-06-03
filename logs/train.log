@@ -1,0 +1,13 @@
+------------load dataset success !---------------
+-------------load model success !----------------
+  0%|          | 0/375 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "train.py", line 141, in <module>
+    train(args, cfg)
+  File "train.py", line 73, in train
+    loss.backward()        #反向传播求解梯度
+  File "/usr/local/lib/python3.5/dist-packages/torch/tensor.py", line 107, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph)
+  File "/usr/local/lib/python3.5/dist-packages/torch/autograd/__init__.py", line 93, in backward
+    allow_unreachable=True)  # allow_unreachable flag
+RuntimeError: CUDA out of memory. Tried to allocate 392.00 MiB (GPU 0; 7.93 GiB total capacity; 1.67 GiB already allocated; 292.31 MiB free; 108.54 MiB cached)

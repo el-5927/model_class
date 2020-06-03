@@ -1,0 +1,1 @@
+python3 test.py --pre_weight "./workdir/49.pth" --val_txt "./dataset/CUB/val.txt"

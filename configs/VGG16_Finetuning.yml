@@ -1,0 +1,24 @@
+MODEL:
+  NAME: 'VGG16_Finetuning'
+  PRETRAIN_MODEL: "./pre_weights/vgg16_bn-6c64b313.pth"
+  INPUT_SIZE: 224
+  PRE_TRAIN: False
+
+DATASETS:
+  NAMES: 'CUB'
+  TRAIN_TXT: 'train_shuf.txt'
+  VAL_TXT: 'val.txt'
+  TRAIN_PATH: './dataset'
+  VAL_PATH: './dataset'
+  NUM_CLASSES: 200
+  
+
+TRAIN_SET:
+  LR_POLOCY: 'SGD'
+  BASE_LR: 0.01
+
+
+WORK_SAVE:
+  MODEL_PATH: './workdir'
+  LOGS_PATH: './logs'
+  
