@@ -32,8 +32,11 @@ def train(args, cfg):
     
     if "SGD" == cfg.TRAIN_SET.LR_POLOCY: 
         optimizer = optim.SGD(net.parameters(), lr=cfg.TRAIN_SET.BASE_LR, momentum=0.9)
+<<<<<<< HEAD
     if "Adam" == cfg.Train_SET.LR_POLOCY:
         pass
+=======
+>>>>>>> 3accaa4bf206aab5e41cdb02bf5e8485b3ba904f
     #optimizer = optim.Adam(net.parameters(), lr=cfg['lr'])
 
     schedule = torch.optim.lr_scheduler.MultiStepLR(optimizer,milestones=[50,70,100,200],gamma=0.1)
