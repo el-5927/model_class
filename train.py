@@ -30,10 +30,10 @@ def train(args, cfg):
     net = build_model(args, cfg, device)
     print("-------------load model success !----------------")
     
+    #学习算法的选择
     if "SGD" == cfg.TRAIN_SET.LR_POLOCY: 
         optimizer = optim.SGD(net.parameters(), lr=cfg.TRAIN_SET.BASE_LR, momentum=0.9)
     if "Adam" == cfg.Train_SET.LR_POLOCY:
-        
         pass
     #optimizer = optim.Adam(net.parameters(), lr=cfg['lr'])
 
