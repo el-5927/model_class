@@ -9,6 +9,7 @@ from torch.utils.data import Dataset, DataLoader
 import torch.optim as optim
 import torch.nn as nn
 from torch.autograd import Variable
+from tensorboardX import SummaryWriter
 
 from data import build_data
 from utils.defaults import get_cfg_defaults
@@ -40,6 +41,15 @@ def train(args, cfg):
     schedule = torch.optim.lr_scheduler.MultiStepLR(optimizer,milestones=[50,70,100,200],gamma=0.1)
 
     criterion = nn.CrossEntropyLoss().to(device)
+    
+    if not os.path.exists(cfg.WORK_SAVE.MODEL_PATH):
+        os.mkdir(cfg.WORK_SAVE.MODEL_PATH)
+    if not os.path.exists(cfg.WORK_SAVE.MODEL_PATH + "/" + cfg.MODEL.NAME):
+        os.mkdir(cfg.WORK_SAVE.MODEL_PATH + "/" + cfg.MODEL.NAME)
+
+    #定义Summary_Writer
+    writer = SummaryWriter(cfg.WORK_SAVE.MODEL_PATH + "/" + cfg.MODEL.NAME + "/logs")
+    writer.add_graph(net, torch.rand([1,3,cfg.MODEL.INPUT_SIZE,cfg.MODEL.INPUT_SIZE]))
 
     start_epoch = 0
     if args.RESUME:
@@ -92,9 +102,20 @@ def train(args, cfg):
                 .format(
                     str(datetime.now()), epoch, args.epoch, i + 1,
                     len(train_loader), loss_avg, correct / total))
-
+                
+                
+                #writer loss
+                for i, (name, param) in enumerate(net.named_parameter()):
+                    if 'bn' not in name:
+                        writer.add_histogram(name, param, 0)
+                        writer.add_scalar('loss', running_loss, i)
+                        running_loss = running_loss * 0.5
+                
+                #feature map的可视化和卷积核的可视化
+                
         
         schedule.step()
+        
         
 
         #模型保存
@@ -108,12 +129,10 @@ def train(args, cfg):
                 "epoch": epoch,
                 "schedule": schedule.state_dict()
             }
-            if not os.path.exists(cfg.WORK_SAVE.MODEL_PATH):
-                os.mkdir(cfg.WORK_SAVE.MODEL_PATH)
-            torch.save(checkpoint, cfg.WORK_SAVE.MODEL_PATH + '/' + str(epoch) + ".pth")
+            torch.save(checkpoint, cfg.WORK_SAVE.MODEL_PATH + "/" + cfg.MODEL.NAME + '/' + str(epoch) + ".pth")
             
             #模型测试
-            test(cfg.WORK_SAVE.MODEL_PATH + '/' + str(epoch) + ".pth", cfg.DATASETS.VAL_TXT)
+            test(cfg.WORK_SAVE.MODEL_PATH + "/" + cfg.MODEL.NAME + '/' + str(epoch) + ".pth", cfg.DATASETS.VAL_TXT)
             # torch.save(checkpoint, cfg_data['save_model'] + f'/{epoch}.pth')
 
             # save_model = os.path.join(cfg_data['save_model'], f'vgg16_{epoch}_model.pth')
